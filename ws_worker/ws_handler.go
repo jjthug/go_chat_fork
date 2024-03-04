@@ -1,13 +1,15 @@
-package ws
+package ws_worker
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
 )
 
 type Handler struct {
-	hub *Hub
+	hub    *Hub
+	worker *RedisTaskDistributor
 }
 
 func NewHandler(hub *Hub) *Handler {
@@ -78,9 +80,17 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 	}
 
 	//Register a new client through register channel
-	//Broadcast that message
 	h.hub.Register <- cl
-	h.hub.Broadcast <- m
+
+	// TODO handle from redis queue to worker
+	//Broadcast that message
+	//h.hub.Broadcast <- m
+	err = h.worker.DistributeTaskSendMessage(c, &PayloadSendMessage{Message: *m})
+	if err != nil {
+		fmt.Printf("error sending message to queue: %v", err)
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
 
 	go cl.writeMessage()
 	cl.readMessage(h.hub)

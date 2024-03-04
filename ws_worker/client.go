@@ -1,4 +1,4 @@
-package ws
+package ws_worker
 
 import (
 	"fmt"

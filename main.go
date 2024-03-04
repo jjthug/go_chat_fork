@@ -8,7 +8,7 @@ import (
 	"server/api"
 	db "server/db/sqlc"
 	"server/util"
-	"server/ws"
+	"server/ws_worker"
 )
 
 func main() {
@@ -32,8 +32,8 @@ func main() {
 	store := db.NewStore(connPool)
 
 	// websocket handler
-	hub := ws.NewHub()
-	wsHandler := ws.NewHandler(hub)
+	hub := ws_worker.NewHub()
+	wsHandler := ws_worker.NewHandler(hub)
 	go hub.Run()
 
 	server, err := api.NewServer(config, store, wsHandler)

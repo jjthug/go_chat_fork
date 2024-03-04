@@ -6,7 +6,7 @@ import (
 	db "server/db/sqlc"
 	"server/token"
 	"server/util"
-	"server/ws"
+	"server/ws_worker"
 )
 
 type Server struct {
@@ -16,7 +16,7 @@ type Server struct {
 	router     *gin.Engine
 }
 
-func NewServer(config util.Config, store db.Store, wsHandler *ws.Handler) (*Server, error) {
+func NewServer(config util.Config, store db.Store, wsHandler *ws_worker.Handler) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker([]byte(config.TokenSymmetric))
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)

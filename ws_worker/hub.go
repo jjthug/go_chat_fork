@@ -1,4 +1,4 @@
-package ws
+package ws_worker
 
 type Room struct {
 	ID      string             `json:"id"`
