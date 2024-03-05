@@ -25,6 +25,7 @@ type Message struct {
 	Username string `json:"username"`
 }
 
+// write message to the client connection
 func (c *Client) writeMessage() {
 	defer func() {
 		err := c.Conn.Close()
@@ -43,6 +44,7 @@ func (c *Client) writeMessage() {
 	}
 }
 
+// read message from the client connection and broadcast to the room
 func (c *Client) readMessage(hub *Hub) {
 	defer func() {
 		hub.Unregister <- c
@@ -66,6 +68,8 @@ func (c *Client) readMessage(hub *Hub) {
 			RoomID:   c.RoomID,
 			Username: c.Username,
 		}
+
+		// todo distribute the message via redis instead
 
 		hub.Broadcast <- msg
 	}

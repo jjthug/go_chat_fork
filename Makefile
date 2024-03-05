@@ -25,5 +25,8 @@ server:
 create_migrations:
 	migrate create -ext sql -dir db/migrations add_users_table
 
+redis:
+	docker run --name redis -p 6379:6379 -d redis:7-alpine
 
-.PHONY: db createdb drop_db db_cli
+
+.PHONY: db createdb drop_db db_cli redis

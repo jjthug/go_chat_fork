@@ -11,16 +11,16 @@ type TaskProcessor interface {
 }
 
 type RedisTaskProcessor struct {
-	server *asynq.Server
-	hub    *Hub
+	server           *asynq.Server
+	broadcastChannel chan *Message
 }
 
-func NewRedisTaskProcessor(redisOpts asynq.RedisClientOpt, hub *Hub) TaskProcessor {
+func NewRedisTaskProcessor(redisOpts asynq.RedisClientOpt, broadcastChannel chan *Message) TaskProcessor {
 	server := asynq.NewServer(redisOpts, asynq.Config{})
 
 	return &RedisTaskProcessor{
-		server: server,
-		hub:    hub,
+		server:           server,
+		broadcastChannel: broadcastChannel,
 	}
 }
 

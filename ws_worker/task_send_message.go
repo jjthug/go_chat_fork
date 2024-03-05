@@ -41,7 +41,7 @@ func (processor *RedisTaskProcessor) ProcessTaskSendMessage(ctx context.Context,
 	}
 
 	// Send message to hub channel TODO check
-	processor.hub.Broadcast <- &payload.Message
+	processor.broadcastChannel <- &payload.Message
 
 	return nil
 }
