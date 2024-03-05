@@ -1,8 +1,10 @@
 package ws_worker
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"github.com/hibiken/asynq"
 	"log"
 )
 
@@ -63,14 +65,22 @@ func (c *Client) readMessage(hub *Hub) {
 			}
 			break
 		}
-		msg := &Message{
+		msg := Message{
 			Content:  string(m),
 			RoomID:   c.RoomID,
 			Username: c.Username,
 		}
 
-		// todo distribute the message via redis instead
+		opts := []asynq.Option{asynq.MaxRetry(10)}
+		//,asynq.ProcessIn(1),
+		//asynq.Queue(QueueCritical),
 
-		hub.Broadcast <- msg
+		// todo distribute the message via redis instead
+		err = hub.Distributor.DistributeTaskSendMessage(context.Background(), &PayloadSendMessage{Message: msg}, opts...)
+		if err != nil {
+			return
+		}
+
+		//hub.Broadcast <- msg
 	}
 }

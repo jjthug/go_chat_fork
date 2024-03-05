@@ -12,17 +12,15 @@ type Hub struct {
 	Register    chan *Client
 	Unregister  chan *Client
 	Broadcast   chan *Message
-	Processor   *TaskProcessor
-	Distributor *TaskDistributor
+	Distributor TaskDistributor
 }
 
-func NewHub(processor *TaskProcessor, distributor *TaskDistributor, broadcastChannel chan *Message) *Hub {
+func NewHub(distributor TaskDistributor, broadcastChannel chan *Message) *Hub {
 	return &Hub{
 		Rooms:       make(map[string]*Room),
 		Register:    make(chan *Client),
 		Unregister:  make(chan *Client),
 		Broadcast:   broadcastChannel,
-		Processor:   processor,
 		Distributor: distributor,
 	}
 }

@@ -43,9 +43,10 @@ func main() {
 	taskProcessor := ws_worker.NewRedisTaskProcessor(redisOpt, broadcastChannel)
 
 	// websocket handler
-	hub := ws_worker.NewHub(&taskProcessor, &taskDistributor, broadcastChannel)
+	hub := ws_worker.NewHub(taskDistributor, broadcastChannel)
 	wsHandler := ws_worker.NewHandler(hub)
 	go hub.Run()
+	go taskProcessor.Start()
 
 	server, err := api.NewServer(config, store, wsHandler)
 
