@@ -2,7 +2,7 @@ package router
 
 import (
 	"server/internal/user"
-	"server/internal/ws"
+	"server/ws"
 	"time"
 
 	"github.com/gin-contrib/cors"
